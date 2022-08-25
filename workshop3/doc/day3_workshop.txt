@@ -1,0 +1,129 @@
+Question 1
+----------
+query { 
+  viewer { 
+    login
+    name
+    url
+    email
+  }
+}
+
+Question 2
+----------
+query {
+  viewer {
+    login
+    repositories(first: 50, orderBy: {direction: DESC, field: CREATED_AT}) {
+      nodes {
+        name
+        url
+        description
+        forkCount
+      }
+    }
+  }
+}
+
+Question 3
+----------
+query {
+	user(login: "fred") {
+    bio
+    name
+    email
+  }
+}
+
+Question 4
+-----------
+query {
+  search (first: 20, query:"angular", type: REPOSITORY) {
+    nodes {
+      ... on Repository {
+      name 
+      url 
+      description
+		}
+ 	}
+  }
+}
+or 
+
+query SearchRepository($abc: String!) {
+  search( first: 20, query: $abc, type: REPOSITORY) {
+    nodes {
+      ... on Repository {
+        name
+        url
+        description
+      }
+    }
+  }
+}
+
+Question 5
+-----------
+query {
+  search (first: 20, query:"angular", type: REPOSITORY) {
+    nodes {
+      ... on Discussion {
+        author {
+          login
+        }
+        title
+      }	
+      ... on Repository {
+        name
+        url
+        description
+      }
+    }
+  }
+}
+
+Question 6
+-----------
+-- to create a repository
+mutation {
+  createRepository(input: { name: "restful-api", visibility: PUBLIC }) {
+		repository {
+      id
+    }
+  }
+}
+
+response
+{
+  "data": {
+    "createRepository": {
+      "repository": {
+        "id": "R_kgDOH4QmPA"
+      }
+    }
+  }
+}
+-- to protect the branch
+mutation {
+  createBranchProtectionRule(
+    input: {
+      repositoryId: "R_kgDOH4QmPA",
+      pattern: "main",
+      requiresApprovingReviews: true,
+      requiredApprovingReviewCount: 2,
+      allowsDeletions: false}) {
+    clientMutationId
+  }
+}
+
+Question 7
+-----------
+
+curl -H "Authorization: bearer token" -X POST -d " \
+ { \
+   \"query\": \"query { viewer { login }}\" \
+ } \
+" https://api.github.com/graphql
+
+curl -x POST
+  --data-binary@filename_query
