@@ -125,5 +125,4 @@ curl -H "Authorization: bearer token" -X POST -d " \
  } \
 " https://api.github.com/graphql
 
-curl -x POST
-  --data-binary@filename_query
+curl -H "Authorization: bearer token" -X --data-binary@query.graphql
